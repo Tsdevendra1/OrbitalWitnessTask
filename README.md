@@ -36,6 +36,18 @@
 
 # Project structure
 
+- `billing` contains all the relevant code for the usage API
+- `billing/router` contains the logic for the API endpoint itself
+- `billing/services` contains the logic for the services that the API uses
+- `billing/services/credit_calculation_service.py` contains the logic for calculating credits from a message
+- `billing/services/message_service.py` contains the logic for getting messages from the API
+- `billing/services/report_service.py` contains the logic for getting reports from the API
+- `billing/services/util.py` contains utility functions
+- `billing/models.py` contains general models used throughout the project
+- `billing/schemas.py` contains models which are returned by the /usage API
+- `billing/dataclasses.py` contains dataclasses used throughout the project
+- `tests` contains all the tests for the project, similarly laid out as the `billing` directory
+
 # Decisions/assumptions made
 
 - A lot of the decisions/assumptions made are documented in the code itself. I will outline some top level decisions made here:
@@ -50,6 +62,10 @@
       - I've made assumptions that the API calls are short enough to carry out within one request would take (for example in a real-world scenario it could take much longer). The current method of getting all the messages and then potentially having to do a report fetch for each message is slow. I've outline potential solutions near the code.
     - Using sync instead of async
       - I used sync instead of async just for the sake of simplicity whilst developing + ease of testing
+    - Using dataclasses
+      - I think perhaps the Credit and BillingParameters dataclasses should have been pydantic models in the end, but I didn't have time to change them. I think it would have been more consistent with the rest of the project and avoided the unnecessary models/dataclasses.py file separation.
+    - Commit history
+      - I've tried to make commits atomic and meaningful, but I've also squashed some commits to make the history cleaner. I think I could have been more descriptive/granular in my commits, but I was trying to balance that with the time constraints.
 
 # If I had more time
 This is a list of things I could have expanded on/added if I had more time to develop the project.
