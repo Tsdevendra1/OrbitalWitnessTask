@@ -3,7 +3,42 @@ name = "orbitalwitnesstask"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = "==3.12.*"
 dependencies = [
-    "fastapi[standard]>=0.115.5",
+    "fastapi[standard]==0.115.5",
+    "requests==2.32.3",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest<8.0.0,>=7.4.3",
+    "mypy<2.0.0,>=1.13.0",
+    "types-requests>=2.32.0.20241016",
+]
+
+[tool.mypy]
+strict = true
+exclude = ["venv", ".venv"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+exclude = []
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "ARG001", # unused arguments in functions
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "W191",  # indentation contains tabs
+    "B904",  # Allow raising exceptions without from e, for HTTPException
 ]
