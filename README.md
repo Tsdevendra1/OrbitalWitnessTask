@@ -1,5 +1,8 @@
 # How to run the service
 
+- First clone the repo `git clone https://github.com/Tsdevendra1/OrbitalWitnessTask.git`
+- Use one of the following methods (when in the root directory of the project)
+
 ## Method 1 (Using docker)
 
 - Build the image `docker build -t fastapi-app .`
