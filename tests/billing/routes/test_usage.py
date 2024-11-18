@@ -2,7 +2,7 @@ from collections.abc import Generator
 from unittest.mock import Mock, patch
 
 import pytest
-from fastapi import FastAPI, HTTPException
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from billing.schemas import UsageEntry, UsageResponse
@@ -16,6 +16,7 @@ def client() -> TestClient:
 
 class TestUsageEndpoint:
     endpoint = "/usage"
+
     @pytest.fixture
     def mock_usage_service(self) -> Generator[Mock, None, None]:
         with patch("billing.router.UsageService") as mock:
@@ -44,6 +45,31 @@ class TestUsageEndpoint:
         assert data["usage"][0]["message_id"] == usage.message_id
         assert data["usage"][0]["timestamp"] == usage.timestamp
         assert data["usage"][0]["report_name"] == usage.report_name
+        assert data["usage"][0]["credits_used"] == float(usage.credits_used)
+
+    def test_message_has_no_report_id__omits_report_name(
+        self,
+        client: TestClient,
+        mock_usage_service: Mock,
+    ) -> None:
+        usage = UsageEntry(
+            message_id=1,
+            timestamp="2024-01-01T00:00:00",
+            report_name=None,
+            credits_used=10.54,
+        )
+        usage_response = UsageResponse(usage=[usage])
+        mock_usage_service.get_usage.return_value = usage_response
+
+        response = client.get(self.endpoint)
+
+        assert response.status_code == 200
+        data = response.json()
+        assert "usage" in data
+        assert len(data["usage"]) == 1
+        assert data["usage"][0]["message_id"] == usage.message_id
+        assert data["usage"][0]["timestamp"] == usage.timestamp
+        assert "report_name" not in data["usage"][0]
         assert data["usage"][0]["credits_used"] == float(usage.credits_used)
 
     def test_empty_messages__returns_200_with_empty_usage(

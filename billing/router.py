@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.get("/usage")
+@router.get("/usage", response_model_exclude_none=True)
 def get_usage() -> UsageResponse:
     """
     Decision: I'm not adding authentication for this endpoint but it should be added in a real-world scenario.
