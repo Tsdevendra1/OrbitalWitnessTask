@@ -4,7 +4,6 @@ from unittest.mock import Mock, patch
 import pytest
 import requests
 from fastapi import HTTPException
-from requests import HTTPError
 
 from billing.models import Report
 from billing.services.reports_service import ReportService
